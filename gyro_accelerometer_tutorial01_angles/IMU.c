@@ -6,7 +6,7 @@
 #include "LIS3MDL.h"
 
 int file;
-int BerryIMUversion = 99;
+int BerryIMUversion = 3;
 
 void  readBlock(uint8_t command, uint8_t size, uint8_t *data)
 {
@@ -46,7 +46,7 @@ void readACC(int  a[])
 	a[2] = (int16_t)(block[4] | block[5] << 8);
 }
 
-
+/*
 void readMAG(int  m[])
 {
 	uint8_t block[6];
@@ -69,7 +69,7 @@ void readMAG(int  m[])
 	m[2] = (int16_t)(block[4] | block[5] << 8);
 
 }
-
+*/
 void readGYR(int g[])
 {
 	uint8_t block[6];
@@ -108,7 +108,7 @@ void writeAccReg(uint8_t reg, uint8_t value)
         exit(1);
     }
 }
-
+/*
 void writeMagReg(uint8_t reg, uint8_t value)
 {
 	if (BerryIMUversion == 1)
@@ -125,7 +125,7 @@ void writeMagReg(uint8_t reg, uint8_t value)
 	}
 }
 
-
+*/
 void writeGyrReg(uint8_t reg, uint8_t value)
 {
 	if (BerryIMUversion == 1)
@@ -194,7 +194,7 @@ void detectIMU()
 	selectDevice(file,LIS3MDL_ADDRESS);	
 	int LIS3MDL_WHO_XG_response = i2c_smbus_read_byte_data(file, LIS3MDL_WHO_AM_I);
 
-	if ( LSM6DSL_WHO_M_response == 0x6A && LIS3MDL_WHO_XG_response == 0x3D){
+	if ( LSM6DSL_WHO_M_response == 0x6A || LIS3MDL_WHO_XG_response == 0x3D){
 		printf ("\n\n\n#####   BerryIMUv3  DETECTED    #####\n\n");
 		BerryIMUversion = 3;
 	}
@@ -252,11 +252,12 @@ void enableIMU()
 		writeAccReg(LSM6DSL_CTRL1_XL,0b10011111);       // ODR 3.33 kHz, +/- 8g , BW = 400hz
 		writeAccReg(LSM6DSL_CTRL8_XL,0b11001000);       // Low pass filter enabled, BW9, composite filter
 		writeAccReg(LSM6DSL_CTRL3_C,0b01000100);        // Enable Block Data update, increment during multi byte read
-
+		/*
 		//Enable  magnetometer
 		writeMagReg(LIS3MDL_CTRL_REG1, 0b11011100);     // Temp sesnor enabled, High performance, ODR 80 Hz, FAST ODR disabled and Selft test disabled.
 		writeMagReg(LIS3MDL_CTRL_REG2, 0b00100000);     // +/- 8 gauss
 		writeMagReg(LIS3MDL_CTRL_REG3, 0b00000000);     // Continuous-conversion mode
+		*/
 	}
 
 
